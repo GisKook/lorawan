@@ -1,0 +1,25 @@
+{ 
+	"Http":{
+		"Addr":":8080",
+		"TimeOut":10,
+		"Path":"web/lorawan/",
+		"Secret":"^hi~W0rld$",
+		"Expire":1800
+	},
+	"DB":{
+		"Host":"222.222.218.51",
+		"Port":"5372",
+		"User":"lorawan",
+		"Passwd":"lorawan",
+		"DbName":"lorawan",
+		"Secret":"^hi~W0rld$"
+	},
+	"Redis":{
+		"Addr":"127.0.0.1:6379",
+		"MaxIdle":100,
+		"IdleTimeOut":240,
+		"Passwd":"redis",
+		"Secret":"^hello~World$",
+		"Expire":900
+	}
+}

@@ -1,0 +1,80 @@
+{{define "header"}}
+
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+		<ul class="nav navbar-nav navbar-right">
+			<li>
+				<a href="#"><i class="fa fa-user"></i>欢迎您，{{.Name}}</a>
+			</li>
+			<li>
+				<a href="/web/user/logout"><i class="fa fa-sign-out"></i>退出</a>
+			</li>
+		</ul>
+	    <div class="navbar-header">
+	        <a class="navbar-brand" href="#">PICC农险平台</a>
+	    </div>
+	    <div>
+	        <ul class="nav navbar-nav">
+	            {{if .BM}}
+	            <li class="dropdown">
+	                <a href="#" class="dropdown-toggle" data-toggle="dropdown">业务管理<b class="caret"></b></a>
+	                <ul class="dropdown-menu">
+	            		{{if .BM.Undertake}}
+	            		<li><a href="#">承保</a></li>
+	            		{{end}}
+	            		{{if .BM.Verification}}
+	            		<li><a href="#">核保</a></li>
+	            		{{end}}
+	            		{{if .BM.Loss}}
+	            		<li><a href="#">定损</a></li>
+	            		{{end}}
+	                </ul>
+	            </li>
+	            {{end}}
+
+	            {{if .SM}}
+	            <li class="dropdown">
+	                <a href="#" class="dropdown-toggle" data-toggle="dropdown">统计管理(尚不明确)<b class="caret"></b></a>
+	                <ul class="dropdown-menu">
+	            		{{if .SM.Statistic}}
+	            		<li><a href="#">统计相关</a></li>
+	            		{{end}}
+	            		{{if .SM.LargeLoss}}
+	            		<li><a href="#">大面积定损</a></li>
+	            		{{end}}
+	                </ul>
+	            </li>
+	            {{end}}
+
+	            {{if .SYM}}
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						{{if .SYM.UserManagement}}
+						<li><a href="#">人员管理</a></li>
+						{{end}}
+						{{if .SYM.Subject}}
+						<li><a href="#">标的管理</a></li>
+						{{end}}
+					</ul>
+				</li>
+				{{end}}
+
+				{{if .Mine}}
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">我的<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						{{if .Mine.Setting}}
+						<li><a href="#">保单</a></li>
+						{{end}}
+						{{if .Mine.Insurance}}
+						<li><a href="#">设置</a></li>
+						{{end}}
+					</ul>
+				</li>
+				{{end}}
+	        </ul>
+	    </div>
+	</div>
+</nav>
+{{end}}

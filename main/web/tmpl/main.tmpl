@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{{.Title}}</title>
+	<link rel="stylesheet" type="text/css" href="lib/bootsrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/index.min.css">
+</head>
+<body>
+	{{template "header" .Header}}
+	<div class="container">
+		<ol class="breadcrumb">
+	        <li>系统管理</li>
+	        <li>用户管理</li>
+    	</ol>
+		<iframe id="iframeResult" src="/web/lorawan/undertake"></iframe>
+	</div>
+
+	<script type="text/javascript" src="lib/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="lib/bootsrap/js/bootstrap.min.js"></script>
+</body>
+</html>

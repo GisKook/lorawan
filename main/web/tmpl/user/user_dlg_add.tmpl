@@ -1,0 +1,72 @@
+{{define "user_dlg_add"}}
+<div id="user_dlg_add" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">添加用户</h4>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="user_dlg_add_form">
+          <div class="input-group">
+            <input type="text" name="name" class="form-control" placeholder="姓名">
+            <input type="text" name="id" class="form-control" placeholder="身份证号">
+            <input type="text" name="tel" class="form-control" placeholder="电话号码">
+            <input type="text" name="prov" class="form-control" placeholder="省">
+            <input type="text" name="city" class="form-control" placeholder="市">
+            <input type="text" name="county" class="form-control" placeholder="县">
+            <input type="text" name="post_code" class="form-control" placeholder="行政区划代码">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="super">超级管理员</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="undertake">承保角色</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="verification">核保角色</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="loss">定损角色</label>
+            </div>
+          </div>
+      </div>
+      </form>
+      <div class="input-group-btn">
+        <button class="btn btn-default" id="user_dlg_add_btn">
+          <i class="glyphicon glyphicon-search"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+  $(function () {
+    $('#user_dlg_add_btn').click(function () {
+      
+      var request = $.ajax({
+        url: "/web/user/add",
+        type: "POST",
+        aysnc: false,
+        data: $('#user_dlg_add_form').serialize()
+      });
+
+      request.done(function (msg) {
+        // $('#user_dlg_add').modal('hide');
+        // $("[data-dismiss=modal]").trigger({ type: "click" });
+        alert(msg);
+        $('.close').click(); 
+      });
+      request.fail(function (jqXHR, textStatus) {
+        alert(textStatus);
+      });
+
+    });
+  });  
+</script>
+{{end}}
