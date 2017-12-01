@@ -1,28 +1,132 @@
 <!DOCTYPE html>
 <html>
-	<head lang="en">
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	</head>
-	<body class="login">
-		<section class="main ">
-		<div class="container clearfix">
-			<div class="login-con">
-				<form id="loginForm" method="post" action="/web/user/login">
-					<ul>
-						<li class="login-u">
-						<input type="text" name="user" placeholder="用户名">
-						</li>
-						<li class="login-p">
-						<input type="password" name="passwd" placeholder="密码">
-						</li>
-					</ul>
 
-					<button class="g-btn" type="submit">登录</button>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>电科导航lorawan平台</title>
+	<link rel="stylesheet" href="/3rd/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/lorawan.css">
+	<script src="/3rd/lib/jquery-3.2.1.min.js"></script>
+	<script src="/3rd/lib/bootstrap/js/bootstrap.min.js"></script>
+</head>
 
+<body class="login" style="background-image:url(/asset/lorawan.jpg)">
+	<div class="container" style="padding-top:15%">
+		<div class="col-md-4 col-md-offset-4">
+			<div class="panel panel-default" style="padding:4%;background-color:lightyellow">
+				<form id="form_login">
+					<div class="input-group" id="form_user">
+						<span class="input-group-addon">
+							<i class="glyphicon glyphicon-user"></i>
+						</span>
+						<input id="user" type="text" class="form-control" name="user" placeholder="用户名">
+					</div>
+					<div class="input-group" id="form_passwd">
+						<span class="input-group-addon">
+							<i class="glyphicon glyphicon-lock"></i>
+						</span>
+						<input id="passwd" type="password" class="form-control" name="passwd" placeholder="密码">
+					</div>
 				</form>
+				<button type="button" class="btn btn-default btn-block" id="btn_login" style="margin-top:20px">登录</button>
 			</div>
 		</div>
-		</section>
-	</body>
+	</div>
+	<script> 
+		$(function () {
+			function login_validate_form() {
+				var user = document.forms["form_login"]["user"].value;
+				if (user == null || user == "") {
+					return 1;
+				}
+				var passwd = document.forms["form_login"]["passwd"].value;
+				if (passwd == null || passwd == "") {
+					return 2;
+				}
+				return 0;
+			}
+			$('#user').on('input', function () {
+				var user = document.forms["form_login"]["user"].value;
+				if (user != null && user != "") {
+					$('#form_user').removeClass('has-error')
+					$('#form_user').tooltip('destroy')
+				}
+			});
+
+			$('#passwd').on('input', function () {
+				var passwd = document.forms["form_login"]["passwd"].value;
+				if (passwd != null && passwd != "") {
+					$('#form_passwd').removeClass('has-error')
+					$('#form_passwd').tooltip('destroy')
+				}
+			})
+			$('#btn_login').click(function () {
+				var validate_result = login_validate_form()
+				if (validate_result == 0) {
+					var request = $.ajax({
+						url: "/web/user/login",
+						type: "POST",
+						aysnc: false,
+						data: $('#form_login').serialize()
+					});
+
+					request.done(function (msg) {
+						obj = JSON.parse(msg);
+						if (obj.code == 0){
+							window.location.replace('/web/user/main')
+							//var form = $('<form action="/web/user/main" method="post"><input id="xxx" name="xxx" ></form>');
+							//$('body').append(form);
+							//form.submit()
+						} else if (obj.code == 200) {
+							$('#form_user').addClass('has-error')
+							$('#form_user').focus()
+							$('#form_user').data('toggle', 'tooltip')
+							$('#form_user').data('placement', 'right')
+							$('#form_user').attr('title', obj.desc)
+							$('#form_user').tooltip(
+								{ container: 'body' }
+							)
+							$('#form_user').tooltip('show')
+						} else if (obj.code == 201) {
+							$('#form_passwd').addClass('has-error')
+							$('#form_passwd').focus()
+							$('#form_passwd').data('toggle', 'tooltip')
+							$('#form_passwd').data('placement', 'right')
+							$('#form_passwd').attr('title', obj.desc)
+							$('#form_passwd').tooltip(
+								{ container: 'body' }
+							)
+							$('#form_passwd').tooltip('show')
+						}
+					});
+					request.fail(function (jqXHR, textStatus) {
+					});
+				} else {
+					if (validate_result == 1) {
+						$('#form_user').addClass('has-error')
+						$('#form_user').focus()
+						$('#form_user').data('toggle', 'tooltip')
+						$('#form_user').data('placement', 'right')
+						$('#form_user').attr('title', '请输入用户名')
+						$('#form_user').tooltip(
+							{ container: 'body' }
+
+						)
+						$('#form_user').tooltip('show')
+					} else {
+						$('#form_passwd').addClass('has-error')
+						$('#form_passwd').focus()
+						$('#form_passwd').data('toggle', 'tooltip')
+						$('#form_passwd').data('placement', 'right')
+						$('#form_passwd').attr('title', '请输入密码')
+						$('#form_passwd').tooltip(
+							{ container: 'body' }
+						)
+						$('#form_passwd').tooltip('show')
+					}
+				}
+			});
+		});
+	</script>
+</body>
 </html>

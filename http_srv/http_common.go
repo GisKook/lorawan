@@ -8,53 +8,20 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
+	"github.com/giskook/lorawan/base"
 )
-
-type ctx_key int
-
-type Code int
-
-const (
-	HTTP_REP_SUCCESS        Code    = 0
-	HTTP_REP_LACK_PARAMETER Code    = 1
-	HTTP_REP_INTERAL_ERROR  Code    = 2
-	xkey                    ctx_key = 0
-)
-
-var HTTP_REQUEST_DESC []string = []string{
-	"成功",
-	"缺少参数",
-	"服务器内部错误"}
-
-func (c Code) Desc() string {
-	return HTTP_REQUEST_DESC[c]
-}
 
 type GeneralResponse struct {
 	Code int    `json:"code"`
 	Desc string `json:"desc"`
 }
 
-func EncodeGeneralResponse(code Code) string {
-	general_response := &GeneralResponse{
-		Code: int(code),
-		Desc: code.Desc(),
-	}
-
-	resp, _ := json.Marshal(general_response)
-
-	return string(resp)
-}
-
-func EncodeErrResponse(code int, desc string) string {
+func EncodeErrResponse(w http.ResponseWriter, err *base.LorawanError) {
 	gr := &GeneralResponse{
-		Code: code,
-		Desc: desc,
+		Code: err.Code,
+		Desc: err.Desc(),
 	}
-
-	resp, _ := json.Marshal(gr)
-
-	return string(resp)
+	marshal_json(w, gr)
 }
 
 func RecordReq(r *http.Request) {
