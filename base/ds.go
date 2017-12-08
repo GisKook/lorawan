@@ -5,3 +5,8 @@ type User struct {
 	Alias  string
 	Passwd string
 }
+
+type DBResult struct{
+	Err error
+	Extra interface{}
+}

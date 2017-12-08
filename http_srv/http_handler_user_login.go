@@ -48,5 +48,6 @@ func (h *HttpSrv) handler_web_user_logout(w http.ResponseWriter, r *http.Request
 	RecordReq(r)
 	deleteCookie := http.Cookie{Name: "Auth", Value: "none", Expires: time.Now()}
 	http.SetCookie(w, &deleteCookie)
+	http.Redirect(w, r, "/", 307)
 	return
 }

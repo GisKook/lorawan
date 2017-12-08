@@ -1,23 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>{{.Title}}</title>
-	<link rel="stylesheet" type="text/css" href="lib/bootsrap/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="lib/font-awesome-4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="css/index.min.css">
+	<link rel="stylesheet" type="text/css" href="/3rd/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/3rd/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/3rd/css/index.min.css">
+	<link rel="stylesheet" type="text/css" href="/css/lorawan.css">
+	<script type="text/javascript" src="/3rd/js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="/3rd/lib/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://js.arcgis.com/3.22/dijit/themes/claro/claro.css">
+	<link rel="stylesheet" href="https://js.arcgis.com/3.22/esri/css/esri.css">
+	<script src="https://js.arcgis.com/3.22/"></script>
+	<script>
+		dojo.require("dijit.layout.BorderContainer");
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("esri.map");
+		var map;
+		function init() {
+			map = new esri.Map("map");
+	//		var layer = new esri.layers.ArcGISDynamicMapServiceLayer("http://222.222.218.50:6080/arcgis/rest/services/MyMapService/MapServer");
+			var layer = new esri.layers.ArcGISTiledMapServiceLayer("http://222.222.218.50:6080/arcgis/rest/services/nmgMapService/MapServer");
+			map.addLayer(layer);
+			var resizeTimer;
+			dojo.connect(map, 'onLoad', function (theMap) {
+				dojo.connect(dijit.byId('map'), 'resize', function () {
+					clearTimeout(resizeTimer);
+					resizeTimer = setTimeout(function () {
+						map.resize();
+						map.reposition();
+					}, 500);
+				});
+			});
+		}
+		dojo.addOnLoad(init);
+	</script>
 </head>
-<body>
-	{{template "header" .Header}}
-	<div class="container">
-		<ol class="breadcrumb">
-	        <li>系统管理</li>
-	        <li>用户管理</li>
-    	</ol>
-		<iframe id="iframeResult" src="/web/lorawan/undertake"></iframe>
-	</div>
 
-	<script type="text/javascript" src="lib/jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="lib/bootsrap/js/bootstrap.min.js"></script>
+<body>
+	<div class="row-container">
+		<div class="first-row">
+			{{template "header" .Header}}
+		</div>
+		<div class="second-row" id="map">
+		</div>
+	</div>
+	</div>
 </body>
 </html>

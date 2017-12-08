@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	SQL_GET_USER_INFO string = "select lorawan_user.alias,lorawan_user.passwd, lorawan_role.name ,lorawan_entity.name, lorawan_entity.alias from lorawan_user, lorawan_role, lorawan_entity, lorawan_user_role, lorawan_role_entity where lorawan_user.id=lorawan_user_role.user_id and lorawan_role.id=lorawan_user_role.role_id and lorawan_role.id=lorawan_role_entity.role_id and lorawan_role_entity.entity_id=lorawan_entity.id and lorawan_user.id=$1"
+	SQL_USER_LOGIN string = "select lorawan_user.alias,lorawan_user.passwd, lorawan_role.name ,lorawan_entity.name, lorawan_entity.alias from lorawan_user, lorawan_role, lorawan_entity, lorawan_user_role, lorawan_role_entity where lorawan_user.id=lorawan_user_role.user_id and lorawan_role.id=lorawan_user_role.role_id and lorawan_role.id=lorawan_role_entity.role_id and lorawan_role_entity.entity_id=lorawan_entity.id and lorawan_user.id=$1"
 )
 
 func (db_socket *DBSocket) valid_passwd(passwd_input string, secret string, passwd_store string) bool {
@@ -25,7 +25,7 @@ func (db_socket *DBSocket) valid_passwd(passwd_input string, secret string, pass
 }
 
 func (db_socket *DBSocket) UserValid(user string, password string) (string, string, error) {
-	rows, err := db_socket.db.Query(SQL_GET_USER_INFO, user)
+	rows, err := db_socket.db.Query(SQL_USER_LOGIN, user)
 	if err != nil {
 		return "", "", base.NewErr(err, base.ERR_DB_QUERY_FAIL_CODE, base.ERR_DB_QUERY_FAIL_DESC)
 	}
