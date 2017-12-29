@@ -5,19 +5,21 @@ import (
 	"fmt"
 	"github.com/giskook/lorawan/base"
 	"io"
-	"log"
 )
 
 const (
 	SQL_USER_LOGIN string = "select lorawan_user.alias,lorawan_user.passwd, lorawan_role.name ,lorawan_entity.name, lorawan_entity.alias from lorawan_user, lorawan_role, lorawan_entity, lorawan_user_role, lorawan_role_entity where lorawan_user.id=lorawan_user_role.user_id and lorawan_role.id=lorawan_user_role.role_id and lorawan_role.id=lorawan_role_entity.role_id and lorawan_role_entity.entity_id=lorawan_entity.id and lorawan_user.id=$1"
 )
 
-func (db_socket *DBSocket) valid_passwd(passwd_input string, secret string, passwd_store string) bool {
+func (db_socket *DBSocket) gen_passwd(password , secret string) string{
 	m := md5.New()
-	io.WriteString(m, passwd_input)
-	log.Println(fmt.Sprintf("%x", m.Sum([]byte(secret))))
+	io.WriteString(m, password)
 
-	if fmt.Sprintf("%x", m.Sum([]byte(secret))) == passwd_store {
+	return fmt.Sprintf("%x", m.Sum([]byte(secret)))
+}
+
+func (db_socket *DBSocket) valid_passwd(passwd_input string, secret string, passwd_store string) bool {
+	if db_socket.gen_passwd(passwd_input, secret) == passwd_store {
 		return true
 	}
 

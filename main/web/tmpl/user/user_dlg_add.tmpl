@@ -8,65 +8,115 @@
         <h4 class="modal-title">添加用户</h4>
       </div>
       <div class="modal-body">
-        <form method="post" id="user_dlg_add_form">
-          <div class="input-group">
-            <input type="text" name="name" class="form-control" placeholder="姓名">
-            <input type="text" name="id" class="form-control" placeholder="身份证号">
-            <input type="text" name="tel" class="form-control" placeholder="电话号码">
-            <input type="text" name="prov" class="form-control" placeholder="省">
-            <input type="text" name="city" class="form-control" placeholder="市">
-            <input type="text" name="county" class="form-control" placeholder="县">
-            <input type="text" name="post_code" class="form-control" placeholder="行政区划代码">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="super">超级管理员</label>
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="undertake">承保角色</label>
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="verification">核保角色</label>
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="loss">定损角色</label>
+        <form id="user_dlg_form_person_info">
+          <div class="form-group">
+            <div class="input-group" id="user_dlg_add_form_id">
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-user"></i>
+              </span>
+              <input type="text" id="id" name="id" class="form-control" placeholder="登录名">
             </div>
           </div>
-      </div>
-      </form>
-      <div class="input-group-btn">
-        <button class="btn btn-default" id="user_dlg_add_btn">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
+          <div class="form-group">
+            <div class="input-group" id="user_dlg_add_form_alias">
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-cloud"></i>
+              </span>
+              <input type="text" id="alias" name="alias" class="form-control" placeholder="昵称">
+            </div>
+          </div>
+          <div id="user_dlg_add_form_user_type">
+            <label class="radio-inline">
+              <input type="radio" name="user_type" value="1">超级管理员</label>
+            <label class="radio-inline">
+              <input type="radio" name="user_type" value="2">普通用户</label>
+          </div>
+        </form>
+        <div class="btn-group" style="width:100%">
+          <button class="btn btn-primary" id="user_dlg_btn_add_ok" style="float:left;width:45%;margin-top:10px">
+            <span>确定</span>
+            <i class="glyphicon glyphicon-ok"></i>
+          </button>
+          <button class="btn btn-primary" id="user_dlg_btn_add_cancel" style="float:right;width:45%;margin-top:10px">
+            <span>取消</span>
+            <i class="glyphicon glyphicon-remove"></i>
+          </button>
+        </div>
+        <div id="alert_placeholder" style="margin-top: 10px">
+        </div>
       </div>
     </div>
-
   </div>
 </div>
 <script>
   $(function () {
-    $('#user_dlg_add_btn').click(function () {
-      
-      var request = $.ajax({
-        url: "/web/user/add",
-        type: "POST",
-        aysnc: false,
-        data: $('#user_dlg_add_form').serialize()
-      });
+    function user_form_add_validate() {
+      var login_name = document.forms["user_dlg_form_person_info"]["id"].value
+      if (login_name == null || login_name == "") {
+        return 1;
+      }
+      var login_alias = document.forms["user_dlg_form_person_info"]["alias"].value
+      if (login_alias == null || login_alias == "") {
+        return 2;
+      }
 
-      request.done(function (msg) {
-        // $('#user_dlg_add').modal('hide');
-        // $("[data-dismiss=modal]").trigger({ type: "click" });
-        alert(msg);
-        $('.close').click(); 
-      });
-      request.fail(function (jqXHR, textStatus) {
-        alert(textStatus);
-      });
+      if ($('#user_dlg_form_person_info input:radio:checked').val() == null) {
+        return 3;
+      }
 
+      return 0;
+    }
+
+    $('#user_dlg_btn_add_cancel').click(function () {
+      $('.close').click();
+    })
+
+    $('#user_dlg_btn_add_ok').click(function () {
+      var validate = user_form_add_validate();
+      if (validate == 0) {
+        var request = $.ajax({
+          url: "/web/user/add",
+          type: "POST",
+          aysnc: false,
+          data: $('#user_dlg_form_person_info').serialize()
+        });
+
+        request.done(function (msg) {
+          var obj = JSON.parse(msg)
+          if (obj.code == 0) {
+            bootstrap_alert.success($('#alert_placeholder'), obj.desc)
+          } else if (obj.code == 202) {
+            bootstrap_alert.danger($('#alert_placeholder'), obj.desc)
+          }
+        });
+        request.fail(function (jqXHR, textStatus) {
+          alert(textStatus);
+        });
+      } else if (validate == 1) {
+        error_tips($('#user_dlg_add_form_id'), "请输入用户名")
+      } else if (validate == 2) {
+        error_tips($('#user_dlg_add_form_alias'), "请输入昵称")
+      } else if (validate == 3) {
+        error_tips($('#user_dlg_add_form_user_type'), "请选择角色")
+      }
     });
+    $('#id').on('input', function () {
+      var id = document.forms["user_dlg_form_person_info"]["id"].value
+      if (id != null && id != "") {
+        error_tips_destroy($('#user_dlg_add_form_id'))
+      }
+    })
+    $('#alias').on('input', function () {
+      var alias = document.forms["user_dlg_form_person_info"]["alias"].value
+      if (alias != null && alias != "") {
+        error_tips_destroy($('#user_dlg_add_form_alias'))
+      }
+    })
+    $('#user_dlg_add_form_user_type').click(function () {
+      if ($('#user_dlg_form_person_info input:radio:checked').val() != null) {
+        error_tips_destroy($('#user_dlg_add_form_user_type'))
+      }
+    })
   });  
 </script>
 {{end}}

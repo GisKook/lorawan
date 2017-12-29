@@ -1,0 +1,246 @@
+{{define "user_dlg_modify"}}
+<div id="user_dlg_modify" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">修改用户信息</h4>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <form class="form-inline" id="user_dlg_modify_form_person_info">
+            <div class="form-group">
+              <input type="text" id="user_dlg_modify_form_input_id" name="id" class="form-control" placeholder="登录名">
+            </div>
+            <div class="form-group">
+              or
+            </div>
+            <div class="form-group">
+              <input type="text" id="user_dlg_modify_form_input_alias" name="alias" class="form-control" placeholder="昵称">
+            </div>
+            <div class="hide">
+              <input type="text" id="user_dlg_modify_form_input_page_index" name="page_index" value="0" class="form-control">
+              <input type="text" id="user_dlg_modify_form_input_page_size" name="page_size" value="10" class="form-control">
+              <input type="text" id="user_dlg_modify_form_input_page_total" name="page_total" value="0" class="form-control">
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-primary" type="button" id="user_dlg_btn_search">
+                <span>查询</span>
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                <h5>登录名</h5>
+              </th>
+              <th>
+                <h5>昵称</h5>
+              </th>
+              <th>
+                <h5>角色</h5>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="user_dlg_modify_table">
+            <div id="user_dlg_modify_table_tips" style="margin-top: 10px">
+          </tbody>
+        </table>
+        <div>
+          <div class="tabel-page clearfix">
+            <nav>
+              <p class="total-page pull-left">每页显示
+                <span class="num" id="user_dlg_modify_page_tips_size">
+                </span>条，共
+                <span class="num" id="user_dlg_modify_page_tips_total">
+                </span>条</p>
+              <ul class="pagination" id="user_dlg_modify_page" style="float:right">
+                <li class="prev" id="pagination_prev">
+                  <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="next" id="pagination_next">
+                  <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div id="table" style="margin-top: 10px">
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var user_search = function (fn_fill_table, fn_show_pagination) {
+    var request,
+      response;
+    request = $.ajax({
+      url: "/web/user/search",
+      type: "POST",
+      data: $('#user_dlg_modify_form_person_info').serialize()
+    });
+
+    request.done(function (msg) {
+      fn_fill_table(msg);
+      fn_show_pagination(msg);
+    });
+    request.fail(function (jqXHR, textStatus) {
+      console.log(textStatus)
+    });
+  }
+
+  var user_search_fill_table = function (msg) {
+    var obj,
+      types,
+      type_count,
+      index,
+      table_item,
+      page_size,
+      index;
+    index = -1;
+    obj = JSON.parse(msg)
+    types = ["default", "danger", "success", "info", "warning"];
+    types_count = 5;
+    page_size = $('#user_dlg_modify_form_input_page_size').val();
+    if (obj.code == 0) {
+      $('#user_dlg_modify_table_tips').html("");
+      for (index in obj.users) {
+        if ($('#tr' + index).length == 0) {
+          table_item = "<tr class=\"" + types[index % types_count] + "\" id=tr" + index + "> \
+                        <td>"+ obj.users[index].id + "</td>\
+                        <td>"+ obj.users[index].alias + "</td>\
+                        <td>"+ obj.users[index].role + "</td>\
+                        <td>\
+                        <button type=\"button\" class=\"btn btn-primary btn-xs mlr\">删除</button>\
+                        </td>\
+                        </tr>"
+          $('#user_dlg_modify_table').append(table_item);
+        } else {
+          $('#tr' + index).find("td").eq(0).html(obj.users[index].id);
+          $('#tr' + index).find("td").eq(1).html(obj.users[index].alias);
+          $('#tr' + index).find("td").eq(2).html(obj.users[index].role);
+          $('#tr' + index).show();
+        }
+      }
+      page_size = $('#user_dlg_modify_form_input_page_size').val();
+      index++;
+
+      while (index < parseInt(page_size)) {
+        if ($('#tr' + index).length != 0) {
+          $('#tr' + index).hide();
+        }
+        index++;
+      }
+      $('#user_dlg_modify_page_tips_size').html(page_size);
+      $('#user_dlg_modify_page_tips_total').html(obj.users_count);
+    } else {
+      $('#user_dlg_modify_table tr').each(function () {
+        $(this).hide();
+      })
+      bootstrap_alert.danger($('#user_dlg_modify_table_tips'), obj.desc)
+    }
+  }
+
+  var user_search_pagination_show = function (msg) {
+    var obj,
+      page_count,
+      page_size,
+      page_index,
+      index;
+    obj = JSON.parse(msg)
+    page_size = $('#user_dlg_modify_form_input_page_size').val();
+    page_index = $('#user_dlg_modify_form_input_page_index').val();
+    page_count = Math.ceil(obj.users_count / page_size);
+    document.getElementById('user_dlg_modify_form_input_page_total').setAttribute('value', page_count)
+    if (page_count <= 5 && page_count >= 1) {
+      for (index = 0; index < page_count; index++) {
+        if ($('#li' + index).length == 0) {
+          li_item = " <li id=\"li" + index + "\">\
+                    <a href=\"#\">"+ (index + 1).toString() + "</a>\
+                    </li>";
+          $('#pagination_next').before(li_item);
+        }
+      }
+    }
+    $('#user_dlg_modify_page li').each(function () {
+      $(this).removeClass('active');
+      $(this).hide();
+    })
+    for (index = 0; index < page_count; index++) {
+      $('#li' + index).show();
+    }
+    $('#pagination_prev').show();
+    $('#pagination_next').show();
+    $('#li' + page_index).addClass('active');
+    $('#pagination_prev').removeClass("disabled");
+    $('#pagination_next').removeClass("disabled");
+    if (page_index == 0) {
+      $('#pagination_prev').addClass("disabled");
+    }
+
+    if (page_index == page_count - 1) {
+      $('#pagination_next').addClass("disabled");
+    }
+  }
+
+  $('#user_dlg_modify_page').on('click', 'li', function (e) {
+    e.preventDefault();
+    var page_index,
+      page_index_in_dom,
+      page_total;
+
+    page_index_in_dom = parseInt($('#user_dlg_modify_form_input_page_index').val());
+    page_total = parseInt($('#user_dlg_modify_form_input_page_total').val());
+    if ($(this).attr('id') == 'pagination_prev') {
+      page_index = (page_index_in_dom == 0) ? 0 : (page_index_in_dom - 1);
+    } else if ($(this).attr('id') == 'pagination_next') {
+      page_index = (page_total == (page_index_in_dom + 1)) ? page_index_in_dom : (page_index_in_dom + 1);
+    } else {
+      page_index = $(this).text() - 1;
+    }
+
+    document.getElementById('user_dlg_modify_form_input_page_index').setAttribute('value', page_index)
+    user_search(user_search_fill_table, user_search_pagination_show)
+  });
+  $('#user_dlg_modify').bind('shown.bs.modal', function () {
+    user_search(user_search_fill_table, user_search_pagination_show)
+  })
+  $('#user_dlg_btn_search').on('click', function () {
+    user_search(user_search_fill_table, user_search_pagination_show)
+  })
+  $('#user_dlg_modify_table').on('click', 'button', function () {
+    var request,
+      response,
+      id,
+      row;
+    row = $(this).parent().parent();
+    id = $(this).parent().siblings()[0].innerHTML;
+    request = $.ajax({
+      url: "/web/user/del",
+      type: "POST",
+      data: { "id": id },
+    });
+
+    request.done(function (msg) {
+      var obj;
+      obj = JSON.parse(msg);
+      if (obj.code == 0) {
+        row.hide();
+      }
+    });
+    request.fail(function (jqXHR, textStatus) {
+      console.log(textStatus)
+    });
+  })
+</script>
+{{end}}

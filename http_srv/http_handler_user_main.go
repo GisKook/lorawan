@@ -76,7 +76,7 @@ func (h *HttpSrv) handler_web_user_main(w http.ResponseWriter, r *http.Request) 
 	}
 
 	var cancel context.CancelFunc
-	ctx ,cancel = context.WithTimeout(ctx, 5*time.Second)
+	ctx ,cancel = context.WithTimeout(ctx, time.Duration(h.conf.Http.TimeOut)*time.Second)
 	defer cancel()
 
 	user_info := make(chan *base.DBResult)
@@ -92,10 +92,10 @@ func (h *HttpSrv) handler_web_user_main(w http.ResponseWriter, r *http.Request) 
 			Title:info.Extra.(string),
 			Header:h.gen_menu(info.Extra.(string), token.Auth),
 		}
-		tmpl := template.Must(template.ParseFiles("./web/tmpl/main.tmpl", "./web/tmpl/common/header.tmpl"))
+		tmpl := template.Must(template.ParseFiles("./web/tmpl/main.tmpl", "./web/tmpl/common/header.tmpl", "./web/tmpl/user/user_dlg_add.tmpl", "./web/tmpl/user/user_dlg_modify.tmpl"))
 		err := tmpl.Execute(w ,&m)
 		
 		panic(err)
-	}
+		}
 	}
 }

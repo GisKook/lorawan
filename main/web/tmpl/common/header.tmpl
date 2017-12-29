@@ -32,7 +32,8 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						{{if .SYS.UserManagement}}
-						<li><a href="#">人员管理</a></li>
+						<li><a href="#" data-toggle="modal" data-target="#user_dlg_add">添加用户</a></li>
+						<li><a href="#" data-toggle="modal" data-target="#user_dlg_modify">修改用户</a></li>
 						{{end}}
 					</ul>
 				</li>

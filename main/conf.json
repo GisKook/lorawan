@@ -4,7 +4,7 @@
 		"TimeOut":10,
 		"Path":"web/lorawan/",
 		"Secret":"^hi~W0rld$",
-		"Expire":1800
+		"Expire":18000
 	},
 	"DB":{
 		"Host":"222.222.218.51",

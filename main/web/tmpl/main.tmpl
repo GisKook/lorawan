@@ -11,6 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/lorawan.css">
 	<script type="text/javascript" src="/3rd/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="/3rd/lib/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/tips.js"></script>
 	<link rel="stylesheet" href="https://js.arcgis.com/3.22/dijit/themes/claro/claro.css">
 	<link rel="stylesheet" href="https://js.arcgis.com/3.22/esri/css/esri.css">
 	<script src="https://js.arcgis.com/3.22/"></script>
@@ -22,7 +23,7 @@
 		function init() {
 			map = new esri.Map("map");
 	//		var layer = new esri.layers.ArcGISDynamicMapServiceLayer("http://222.222.218.50:6080/arcgis/rest/services/MyMapService/MapServer");
-			var layer = new esri.layers.ArcGISTiledMapServiceLayer("http://222.222.218.50:6080/arcgis/rest/services/nmgMapService/MapServer");
+			var layer = new esri.layers.ArcGISTiledMapServiceLayer("http://222.222.218.50:6080/arcgis/rest/services/MapServiceChina/MapServer");
 			map.addLayer(layer);
 			var resizeTimer;
 			dojo.connect(map, 'onLoad', function (theMap) {
@@ -38,7 +39,6 @@
 		dojo.addOnLoad(init);
 	</script>
 </head>
-
 <body>
 	<div class="row-container">
 		<div class="first-row">
@@ -47,6 +47,7 @@
 		<div class="second-row" id="map">
 		</div>
 	</div>
-	</div>
+	{{template "user_dlg_add"}}
+	{{template "user_dlg_modify"}}
 </body>
 </html>

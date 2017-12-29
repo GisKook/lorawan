@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/css/lorawan.css">
 	<script src="/3rd/js/jquery-3.2.1.min.js"></script>
 	<script src="/3rd/lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/js/tips.js"></script>
 </head>
 
 <body class="login" style="background-image:url(/asset/lorawan.jpg)">
@@ -48,16 +49,14 @@
 			$('#user').on('input', function () {
 				var user = document.forms["form_login"]["user"].value;
 				if (user != null && user != "") {
-					$('#form_user').removeClass('has-error')
-					$('#form_user').tooltip('destroy')
+					error_tips_destroy($('form_user'))
 				}
 			});
 
 			$('#passwd').on('input', function () {
 				var passwd = document.forms["form_login"]["passwd"].value;
 				if (passwd != null && passwd != "") {
-					$('#form_passwd').removeClass('has-error')
-					$('#form_passwd').tooltip('destroy')
+					error_tips_destroy($('form_passwd'))
 				}
 			})
 			$('#btn_login').click(function () {
@@ -78,51 +77,18 @@
 							//$('body').append(form);
 							//form.submit()
 						} else if (obj.code == 200) {
-							$('#form_user').addClass('has-error')
-							$('#form_user').focus()
-							$('#form_user').data('toggle', 'tooltip')
-							$('#form_user').data('placement', 'right')
-							$('#form_user').attr('title', obj.desc)
-							$('#form_user').tooltip(
-								{ container: 'body' }
-							)
-							$('#form_user').tooltip('show')
+							error_tips($('#form_user'), obj.desc)
 						} else if (obj.code == 201) {
-							$('#form_passwd').addClass('has-error')
-							$('#form_passwd').focus()
-							$('#form_passwd').data('toggle', 'tooltip')
-							$('#form_passwd').data('placement', 'right')
-							$('#form_passwd').attr('title', obj.desc)
-							$('#form_passwd').tooltip(
-								{ container: 'body' }
-							)
-							$('#form_passwd').tooltip('show')
+							error_tips($('#form_passwd'), obj.desc)
 						}
 					});
 					request.fail(function (jqXHR, textStatus) {
 					});
 				} else {
 					if (validate_result == 1) {
-						$('#form_user').addClass('has-error')
-						$('#form_user').focus()
-						$('#form_user').data('toggle', 'tooltip')
-						$('#form_user').data('placement', 'right')
-						$('#form_user').attr('title', '请输入用户名')
-						$('#form_user').tooltip(
-							{ container: 'body' }
-
-						)
-						$('#form_user').tooltip('show')
+						error_tips($('#form_user'), '请输入用户名')
 					} else {
-						$('#form_passwd').addClass('has-error')
-						$('#form_passwd').focus()
-						$('#form_passwd').data('toggle', 'tooltip')
-						$('#form_passwd').data('placement', 'right')
-						$('#form_passwd').attr('title', '请输入密码')
-						$('#form_passwd').tooltip(
-							{ container: 'body' }
-						)
-						$('#form_passwd').tooltip('show')
+						error_tips($('#form_passwd'), '请输入密码')
 					}
 				}
 			});

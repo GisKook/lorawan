@@ -16,6 +16,10 @@ type GeneralResponse struct {
 	Desc string `json:"desc"`
 }
 
+var (
+	GRS GeneralResponse = GeneralResponse{Code:base.ERR_NONE_CODE, Desc:base.ERR_NONE_DESC}
+)
+
 func EncodeErrResponse(w http.ResponseWriter, err *base.LorawanError) {
 	gr := &GeneralResponse{
 		Code: err.Code,

@@ -1,9 +1,9 @@
 package base
 
 type User struct {
-	Email  string
-	Alias  string
-	Passwd string
+	ID string `json:"id"`
+	Alias  string `json:"alias"`
+	Role string `json:"role"`
 }
 
 type DBResult struct{

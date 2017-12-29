@@ -56,4 +56,7 @@ func (h *HttpSrv) init_web(r *mux.Router) {
 	r.HandleFunc("/user/login", h.handler_web_user_login)
 	r.HandleFunc("/user/logout", h.handler_web_user_logout)
 	r.HandleFunc("/user/main", h.validate(h.handler_web_user_main))
+	r.HandleFunc("/user/add", h.validate(h.handler_web_user_add))
+	r.HandleFunc("/user/search", h.validate(h.handler_web_user_search))
+	r.HandleFunc("/user/del", h.validate(h.handler_web_user_del))
 }

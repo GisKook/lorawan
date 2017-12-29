@@ -25,6 +25,9 @@ func NewErr(err error, code int, desc string) *LorawanError {
 }
 
 const (
+	ERR_COMMON_NOT_CAPTURE_CODE int = 999
+	ERR_COMMON_NOT_CAPTURE_DESC string = "未捕获的错误"
+
 	ERR_NONE_CODE int = 0
 	ERR_NONE_DESC string = "成功"
 
@@ -53,6 +56,21 @@ const (
 	ERR_USER_NOT_FOUND_DESC      string = "用户不存在"
 	ERR_USER_UNVALID_PASSWD_CODE int    = 201
 	ERR_USER_UNVALID_PASSWD_DESC string = "密码错误"
+
+	ERR_USER_ALREADY_EXIST_CODE int = 202
+	ERR_USER_ALREADY_EXIST_DESC string = "用户已存在"
+
+	ERR_USER_ROLE_ADD_CODE int = 203
+	ERR_USER_ROLE_ADD_DESC string = "添加角色失败"
+
+	ERR_USER_QUERY_CODE int = 204
+	ERR_USER_QUERY_DESC string = "查询用户失败"
+
+	ERR_USER_DEL_CODE int = 205
+	ERR_USER_DEL_DESC string = "删除用户失败"
+
+	ERR_USER_DEL_NO_ID_CODE int = 206
+	ERR_USER_DEL_NO_ID_DESC string = "没有指定要删除的用户"
 )
 
 var ( 
@@ -60,4 +78,5 @@ var (
 	ERROR_HTTP_INNER_PANIC *LorawanError = NewErr(nil, ERR_HTTP_INNER_PANIC_CODE, ERR_HTTP_INNER_PANIC_DESC)
 	ERROR_HTTP_TIMEOUT *LorawanError = NewErr(nil, ERR_HTTP_TIMEOUT_CODE, ERR_HTTP_TIMEOUT_DESC)
 	ERROR_NONE *LorawanError = NewErr(nil, ERR_NONE_CODE, ERR_NONE_DESC)
+	ERROR_NOT_CAPTURE *LorawanError = NewErr(nil, ERR_COMMON_NOT_CAPTURE_CODE, ERR_COMMON_NOT_CAPTURE_DESC)
 )
