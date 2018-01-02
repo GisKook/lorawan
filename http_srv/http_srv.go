@@ -43,7 +43,8 @@ func NewHttpSrv(conf *conf.Conf) *HttpSrv {
 
 func (h *HttpSrv) Start() {
 	s := h.router.PathPrefix("/web").Subrouter()
-	h.init_web(s)
+	h.init_web_user(s)
+	h.init_web_device(s)
 
 	h.router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(h.conf.Http.Path))))
 
@@ -52,11 +53,17 @@ func (h *HttpSrv) Start() {
 	}
 }
 
-func (h *HttpSrv) init_web(r *mux.Router) {
-	r.HandleFunc("/user/login", h.handler_web_user_login)
-	r.HandleFunc("/user/logout", h.handler_web_user_logout)
-	r.HandleFunc("/user/main", h.validate(h.handler_web_user_main))
-	r.HandleFunc("/user/add", h.validate(h.handler_web_user_add))
-	r.HandleFunc("/user/search", h.validate(h.handler_web_user_search))
-	r.HandleFunc("/user/del", h.validate(h.handler_web_user_del))
+func (h *HttpSrv) init_web_user(r *mux.Router) {
+	s := r.PathPrefix("/user").Subrouter()
+	s.HandleFunc("/login", h.handler_web_user_login)
+	s.HandleFunc("/logout", h.handler_web_user_logout)
+	s.HandleFunc("/main", h.validate(h.handler_web_user_main))
+	s.HandleFunc("/add", h.validate(h.handler_web_user_add))
+	s.HandleFunc("/search", h.validate(h.handler_web_user_search))
+	s.HandleFunc("/del", h.validate(h.handler_web_user_del))
+}
+
+func (h *HttpSrv) init_web_device(r *mux.Router) {
+	s := r.PathPrefix("/device").Subrouter()
+	s.HandleFunc("/add", h.validate(h.handler_web_device_add))
 }

@@ -14,4 +14,6 @@ const (
 	WEB_USER_MODIFY_PARA_PAGE_SIZE string = "page_size"
 
 	WEB_USER_DEL_PARA_ID string = "id"
+
+	WEB_DEVICE_ADD_PARA_ID string = "id"
 )

@@ -17,7 +17,7 @@
 	        <ul class="nav navbar-nav">
 	            {{if .DM}}
 	            <li class="dropdown">
-	                <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备管理<b class="caret"></b></a>
+	                <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备绑定<b class="caret"></b></a>
 	                <ul class="dropdown-menu">
 	            		{{if .DM.Bind}}
 	            		<li><a href="#">绑定设备</a></li>
@@ -28,6 +28,15 @@
 	            {{end}}
 
 	            {{if .SYS}}
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">设备管理<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						{{if .SYS.UserManagement}}
+						<li><a href="#" data-toggle="modal" data-target="#device_dlg_add">添加设备</a></li>
+						<li><a href="#" data-toggle="modal" data-target="#device_dlg_modify">修改设备</a></li>
+						{{end}}
+					</ul>
+				</li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理<b class="caret"></b></a>
 					<ul class="dropdown-menu">

@@ -92,7 +92,7 @@ func (h *HttpSrv) handler_web_user_main(w http.ResponseWriter, r *http.Request) 
 			Title:info.Extra.(string),
 			Header:h.gen_menu(info.Extra.(string), token.Auth),
 		}
-		tmpl := template.Must(template.ParseFiles("./web/tmpl/main.tmpl", "./web/tmpl/common/header.tmpl", "./web/tmpl/user/user_dlg_add.tmpl", "./web/tmpl/user/user_dlg_modify.tmpl"))
+		tmpl := template.Must(template.ParseFiles("./web/tmpl/main.tmpl", "./web/tmpl/common/header.tmpl", "./web/tmpl/user/user_dlg_add.tmpl", "./web/tmpl/user/user_dlg_modify.tmpl", "./web/tmpl/device/device_dlg_add.tmpl"))
 		err := tmpl.Execute(w ,&m)
 		
 		panic(err)

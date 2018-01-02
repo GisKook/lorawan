@@ -1,0 +1,85 @@
+{{define "device_dlg_add"}}
+<div id="device_dlg_add" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">添加设备</h4>
+      </div>
+      <div class="modal-body">
+        <form id="device_dlg_form_device_info">
+          <div class="form-group">
+            <div class="input-group" id="device_dlg_add_form_id">
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-user"></i>
+              </span>
+              <input type="text" id="device_dlg_input_id" name="id" class="form-control" placeholder="设备id">
+            </div>
+          </div>
+        </form>
+        <div class="btn-group" style="width:100%">
+          <button class="btn btn-primary" id="device_dlg_btn_add_ok" style="float:left;width:45%;margin-top:10px">
+            <span>确定</span>
+            <i class="glyphicon glyphicon-ok"></i>
+          </button>
+          <button class="btn btn-primary" id="device_dlg_btn_add_cancel" style="float:right;width:45%;margin-top:10px">
+            <span>取消</span>
+            <i class="glyphicon glyphicon-remove"></i>
+          </button>
+        </div>
+        <div id="device_dlg_alert_placeholder" style="margin-top: 10px">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(function () {
+    function device_form_add_validate() {
+      var device_name = document.forms["device_dlg_form_device_info"]["id"].value
+      if (device_name == null || device_name == "") {
+        return 1;
+      }
+
+      return 0;
+    }
+
+    $('#device_dlg_btn_add_cancel').click(function () {
+      $('.close').click();
+    })
+
+    $('#device_dlg_btn_add_ok').click(function () {
+      var validate = device_form_add_validate();
+      console.log(validate)
+      if (validate == 0) {
+        var request = $.ajax({
+          url: "/web/device/add",
+          type: "POST",
+          data: $('#device_dlg_form_device_info').serialize()
+        });
+
+        request.done(function (msg) {
+          var obj = JSON.parse(msg)
+          if (obj.code == 0) {
+            bootstrap_alert.success($('#device_dlg_alert_placeholder'), obj.desc)
+          } else {
+            bootstrap_alert.danger($('#device_dlg_alert_placeholder'), obj.desc)
+          }
+        });
+        request.fail(function (jqXHR, textStatus) {
+          alert(textStatus);
+        });
+      } else if (validate == 1) {
+        error_tips($('#device_dlg_add_form_id'), "请输入设备ID")
+      } 
+    });
+    $('#device_dlg_input_id').on('input', function () {
+      var id = document.forms["device_dlg_form_device_info"]["device_dlg_input_id"].value
+      if (id != null && id != "") {
+        error_tips_destroy($('#device_dlg_add_form_id'))
+      }
+    })
+  });  
+</script>
+{{end}}

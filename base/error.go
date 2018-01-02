@@ -71,6 +71,9 @@ const (
 
 	ERR_USER_DEL_NO_ID_CODE int = 206
 	ERR_USER_DEL_NO_ID_DESC string = "没有指定要删除的用户"
+
+	ERR_DEVICE_ADD_CODE int = 300
+	ERR_DEVICE_ADD_DESC string = "添加设备失败"
 )
 
 var ( 

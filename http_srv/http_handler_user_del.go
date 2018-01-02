@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"context"
 	"time"
+	"strings"
 )
 
 type user_del struct{ 
@@ -19,10 +20,14 @@ func (h *HttpSrv) handler_web_user_del(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	RecordReq(r)
 	r.ParseForm()
 	defer r.Body.Close()
 	id := r.Form.Get(WEB_USER_DEL_PARA_ID)
+	if id == ""{
+		EncodeErrResponse(w, base.ERROR_HTTP_LACK_PARAMTERS)
+		return
+	}
+	id = strings.Replace(id, "'","''", -1)
 
 	ctx := r.Context()
 	var cancel context.CancelFunc

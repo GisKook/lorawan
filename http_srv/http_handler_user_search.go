@@ -25,7 +25,6 @@ func (h *HttpSrv) handler_web_user_search(w http.ResponseWriter, r *http.Request
 		}
 	}()
 
-	RecordReq(r)
 	r.ParseForm()
 	defer r.Body.Close()
 	id := r.Form.Get(WEB_USER_MODIFY_PARA_ID)

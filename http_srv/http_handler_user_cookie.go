@@ -42,7 +42,7 @@ func (h *HttpSrv) set_cookie(res http.ResponseWriter, req *http.Request, auth st
 		return err
 	}
 	exp_cookie_time := time.Now().Add(time.Second * time.Duration(h.conf.Http.Expire))
-	cookie := http.Cookie{Name: COOKIE_AUTH, Value: token, Expires: exp_cookie_time, HttpOnly: true}
+	cookie := http.Cookie{Name: COOKIE_AUTH, Value: token, Path:"/", Expires: exp_cookie_time, HttpOnly: true}
 	http.SetCookie(res, &cookie)
 
 	return nil
@@ -50,6 +50,7 @@ func (h *HttpSrv) set_cookie(res http.ResponseWriter, req *http.Request, auth st
 
 func (h *HttpSrv) validate(page http.HandlerFunc) http.HandlerFunc {
 		return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+			RecordReq(req)
 			cookie, err := req.Cookie(COOKIE_AUTH)
 			if err != nil {
 				http.NotFound(res, req)
