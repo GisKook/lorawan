@@ -71,8 +71,8 @@ func (h *HttpSrv) handler_web_user_main(w http.ResponseWriter, r *http.Request) 
 	ctx := r.Context()
 	token, ok := ctx.Value(auth_key).(JwtAuth)
 	if !ok {
-		http.NotFound(w, r)
-		return
+	//	http.NotFound(w, r)
+	//	return
 	}
 
 	var cancel context.CancelFunc
@@ -80,7 +80,15 @@ func (h *HttpSrv) handler_web_user_main(w http.ResponseWriter, r *http.Request) 
 	defer cancel()
 
 	user_info := make(chan *base.DBResult)
-	go h.db.UserInfoGet(token.Userid, user_info)
+	//go h.db.UserInfoGet(token.Userid, user_info)
+	// test should delete below
+	go func(){
+	user_info <- &base.DBResult{
+		Extra:"zhangkai",
+	}
+}()
+	// test
+
 	select{
 	case <-ctx.Done():
 		EncodeErrResponse(w, base.ERROR_HTTP_TIMEOUT)

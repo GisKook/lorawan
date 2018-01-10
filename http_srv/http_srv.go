@@ -57,7 +57,7 @@ func (h *HttpSrv) init_web_user(r *mux.Router) {
 	s := r.PathPrefix("/user").Subrouter()
 	s.HandleFunc("/login", h.handler_web_user_login)
 	s.HandleFunc("/logout", h.handler_web_user_logout)
-	s.HandleFunc("/main", h.validate(h.handler_web_user_main))
+	s.HandleFunc("/main", h.handler_web_user_main)
 	s.HandleFunc("/add", h.validate(h.handler_web_user_add))
 	s.HandleFunc("/search", h.validate(h.handler_web_user_search))
 	s.HandleFunc("/del", h.validate(h.handler_web_user_del))
