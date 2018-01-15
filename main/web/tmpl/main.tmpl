@@ -9,46 +9,55 @@
 	<link rel="stylesheet" type="text/css" href="/3rd/lib/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="/3rd/css/index.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/lorawan.css">
+	<!-- <link rel="stylesheet" href="https://js.arcgis.com/3.23/esri/css/esri.css"> -->
+	<link rel="stylesheet" href="/3rd/lib/esri/3.23/css/esri.css">
 	<script type="text/javascript" src="/3rd/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="/3rd/lib/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/js/tips.js"></script>
-	<link rel="stylesheet" href="https://js.arcgis.com/3.22/dijit/themes/claro/claro.css">
-	<link rel="stylesheet" href="https://js.arcgis.com/3.22/esri/css/esri.css">
-	<script src="https://js.arcgis.com/3.22/"></script>
-	<script>
-		dojo.require("dijit.layout.BorderContainer");
-		dojo.require("dijit.layout.ContentPane");
-		dojo.require("esri.map");
-		var map;
-		function init() {
-			map = new esri.Map("map");
-	//		var layer = new esri.layers.ArcGISDynamicMapServiceLayer("http://222.222.218.50:6080/arcgis/rest/services/MyMapService/MapServer");
-			var layer = new esri.layers.ArcGISTiledMapServiceLayer("http://222.222.218.50:6080/arcgis/rest/services/MapServiceChina/MapServer");
-			map.addLayer(layer);
-			var resizeTimer;
-			dojo.connect(map, 'onLoad', function (theMap) {
-				dojo.connect(dijit.byId('map'), 'resize', function () {
-					clearTimeout(resizeTimer);
-					resizeTimer = setTimeout(function () {
-						map.resize();
-						map.reposition();
-					}, 500);
-				});
-			});
+	<!-- <script src="https://js.arcgis.com/3.23/"></script> -->
+	<script src="/3rd/lib/esri/3.23/js"></script>
+	<script type="text/javascript" src="/js/map.js"></script>
+	<style>
+		#HomeButton {
+			position: absolute;
+			top: 265px;
+			left: 20px;
+			z-index: 50;
 		}
-		dojo.addOnLoad(init);
-	</script>
+	</style>
 </head>
+
 <body>
 	<div class="row-container">
+		<button type="button" id="left_click" class="btn btn-primary">l</button>
+		<button type="button" id="right_click" class="btn btn-primary">r</button>
+		<button type="button" id="up_click" class="btn btn-primary">u</button>
+		<button type="button" id="down_click" class="btn btn-primary">d</button>
 		<div class="first-row">
-			{{template "header" .Header}}
+			{{ template "header".Header }}
 		</div>
 		<div class="second-row" id="map">
+			<div id="HomeButton"></div>
 		</div>
 	</div>
-	{{template "user_dlg_add"}}
-	{{template "user_dlg_modify"}}
-	{{template "device_dlg_add"}}
+	{{ template "user_dlg_add" }} {{ template "user_dlg_modify" }} {{ template "device_dlg_add" }}
 </body>
+<script>
+	$(document).ready(show_map())
+	document.getElementById('left_click').onclick=function(){
+		map_pan_left();
+	}
+
+	document.getElementById('right_click').onclick=function(){
+		map_pan_right();
+	}
+
+	document.getElementById('up_click').onclick=function(){
+		map_pan_up();
+	}
+
+	document.getElementById('down_click').onclick=function(){
+		map_pan_up();
+	}
+</script>
 </html>
