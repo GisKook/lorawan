@@ -34,19 +34,3 @@ function map_pan_up(){
 function map_pan_down(){
   map.panDown();
 }
-
-
-	$('#dk_left_click').click(function () {
-		console.log("pan left");
-		alert("ddd");
-		map_pan_left();
-	});
-	$('#right_click').click(function () {
-		map_pan_right();
-	});
-	$('#up_click').click(function () {
-		map_pan_up();
-	});
-	$('#down_click').click(function () {
-		map_pan_down();
-	});
