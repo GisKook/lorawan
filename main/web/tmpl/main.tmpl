@@ -29,10 +29,6 @@
 
 <body>
 	<div class="row-container">
-		<button type="button" id="left_click" class="btn btn-primary">l</button>
-		<button type="button" id="right_click" class="btn btn-primary">r</button>
-		<button type="button" id="up_click" class="btn btn-primary">u</button>
-		<button type="button" id="down_click" class="btn btn-primary">d</button>
 		<div class="first-row">
 			{{ template "header".Header }}
 		</div>
@@ -44,20 +40,5 @@
 </body>
 <script>
 	$(document).ready(show_map())
-	document.getElementById('left_click').onclick=function(){
-		map_pan_left();
-	}
-
-	document.getElementById('right_click').onclick=function(){
-		map_pan_right();
-	}
-
-	document.getElementById('up_click').onclick=function(){
-		map_pan_up();
-	}
-
-	document.getElementById('down_click').onclick=function(){
-		map_pan_down();
-	}
 </script>
 </html>
